@@ -99,13 +99,8 @@
 
                         }
                         else {
-                            if (jqXHR.status == '401') {
+                            
                                 $('#errorModal').modal('show');
-                            } else {
-                                $('#divErrorText').text(jqXHR.responseText);
-                                $('#divError').show('fade');
-                            }
-
                         }
 
                         

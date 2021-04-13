@@ -21,7 +21,7 @@ namespace WebApi_JWT_Auth.Models
             SecurityTokenDescriptor securityTokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, sUserName) }),
-                Expires = DateTime.UtcNow.AddSeconds(10),
+                Expires = DateTime.Now.AddSeconds(20),
                 SigningCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256)
             };
 
@@ -47,19 +47,22 @@ namespace WebApi_JWT_Auth.Models
                     RequireExpirationTime = true,
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(Key)
+                    IssuerSigningKey = new SymmetricSecurityKey(Key),
+                    ClockSkew = TimeSpan.Zero
                 };
 
                 SecurityToken securityToken;
 
                 ClaimsPrincipal claimsPrincipal = Handler.ValidateToken(sTocken, tokenValidationParameters, out securityToken);
 
+                DateTime expireDate = securityToken.ValidTo;
+
                 return claimsPrincipal;
 
             }
             catch (Exception)
             {
-                throw;
+                return null;
             }
         }
 
